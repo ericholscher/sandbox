@@ -5,7 +5,7 @@ Requires PyYaml (http://pyyaml.org/), but that's checked for in __init__.
 
 Add this to your settings.
 SERIALIZATION_MODULES = {
-    "yamlfk" : "sandbox.ctyaml",
+    "yamlfk" : "sandbox.serializers.yamlfk",
 }
 
 Then use it with dumpdata and loaddata --format=yamlfk
