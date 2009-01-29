@@ -1,0 +1,7 @@
+Some of the random things that I don't have a better home for.
+
+
+Currently:
+
+- serializers
+This contains my work on making ForeignKey serializers work across DBs
