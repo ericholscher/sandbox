@@ -14,7 +14,6 @@ Usage:: trac_patch.py [ticket_num]
   -a, --ask      Confirm ticket and patch name
 
 Examples::
-    trac_patch.py [ticket_num] [-r]
 
     #Apply patch 6378
     trac_patch.py 6378
@@ -39,31 +38,21 @@ import commands
 from optparse import OptionParser
 
 django_src = '/Users/ericholscher/Code/Python/django-trunk/'
+trac_url = 'http://code.djangoproject.com'
+ticket_url = 'http://code.djangoproject.com/ticket/%s'
 
 parser = OptionParser(usage='%prog [ticket_num]')
-
 parser.add_option("-r", "--reverse", action="store_true", dest="reverse",
                   default=False, help="Reverse the patch")
 parser.add_option("-g", "--git", action="store_true", dest="git",
                   default=False, help="Make a git branch")
 parser.add_option("-a", "--ask", action="store_true", dest="ask",
                   default=False, help="Confirm ticket and patch name")
-
 (options, args) = parser.parse_args()
-
 
 ask_ticket_confirmation = options.ask
 ask_patch_confirmation = options.ask
 git_integration = options.git
-
-
-trac_url = 'http://code.djangoproject.com'
-ticket_url = 'http://code.djangoproject.com/ticket/%s'
-
-if len(args) != 1:
-    print "Please provide a ticket number"
-    sys.exit()
-ticket_num = args[0]
 
 if options.reverse:
     print "Reversing patch"
@@ -71,6 +60,11 @@ if options.reverse:
 else:
     print "Patching file"
     reverse_string = ''
+
+if len(args) != 1:
+    print "Please provide a ticket number"
+    sys.exit()
+ticket_num = args[0]
 
 request = urllib2.urlopen(ticket_url % ticket_num)
 soup = BeautifulSoup.BeautifulSoup(request.read())
@@ -84,6 +78,7 @@ if ask_ticket_confirmation:
         sys.exit()
 
 links = soup.findAll('a', title="View attachment")
+latest_patch_url = links[-1]['href']
 
 if ask_patch_confirmation:
     print "Which patch would you like to apply?"
@@ -91,8 +86,6 @@ if ask_patch_confirmation:
         print "%s) %s" % (num, link.find(text=True))
     patch_num = int(raw_input('>'))
     latest_patch_url = links[patch_num]['href']
-else:
-    latest_patch_url = links[-1]['href']
 
 patch_req = urllib2.urlopen(trac_url + latest_patch_url)
 patch_soup = BeautifulSoup.BeautifulSoup(patch_req)
@@ -114,6 +107,6 @@ if git_integration:
     commands.getoutput('git checkout -b %s' % branch_name)
 
 cmd = 'patch -p0 %s < %s' % (reverse_string, patch_filename)
-print "running %s" % cmd
+print cmd
 output = commands.getoutput(cmd)
 print output
