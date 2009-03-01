@@ -6,14 +6,8 @@ Description::
 Simple utility to grab and apply a Django trac ticket.
 It could in theory be used for any trac installation.
 
-Usage:: trac_patch.py [ticket_num]
-
-  -h, --help     show this help message and exit
-  -r, --reverse  Reverse the patch
-  -g, --git      Make a git branch
-  -a, --ask      Confirm ticket and patch name
-
 Examples::
+    trac_patch.py [ticket_num]
 
     #Apply patch 6378
     trac_patch.py 6378
@@ -26,7 +20,6 @@ Examples::
 
     #Confirm patch filename and ticket filename
     trac_patch.py 6378 -a
-
 """
 
 
@@ -44,6 +37,8 @@ ticket_url = 'http://code.djangoproject.com/ticket/%s'
 parser = OptionParser(usage='%prog [ticket_num]')
 parser.add_option("-r", "--reverse", action="store_true", dest="reverse",
                   default=False, help="Reverse the patch")
+parser.add_option("-p", "--strip", action="store", dest="strip_string",
+                  type="int", default=0, help="pass this along to patch as the -p[num]")
 parser.add_option("-g", "--git", action="store_true", dest="git",
                   default=False, help="Make a git branch")
 parser.add_option("-a", "--ask", action="store_true", dest="ask",
@@ -106,7 +101,7 @@ if git_integration:
     print "Making git branch named %s" % branch_name
     commands.getoutput('git checkout -b %s' % branch_name)
 
-cmd = 'patch -p0 %s < %s' % (reverse_string, patch_filename)
+cmd = 'patch -p%s %s < %s' % (options.strip_string, reverse_string, patch_filename)
 print cmd
 output = commands.getoutput(cmd)
 print output
