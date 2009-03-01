@@ -1,34 +1,34 @@
 #!/usr/bin/python
 
-    """
-    Description::
+"""
+Description::
 
-    Simple utility to grab and apply a Django trac ticket.
-    It could in theory be used for any trac installation.
+Simple utility to grab and apply a Django trac ticket.
+It could in theory be used for any trac installation.
 
-    Usage:: trac_patch.py [ticket_num]
+Usage:: trac_patch.py [ticket_num]
 
-      -h, --help     show this help message and exit
-      -r, --reverse  Reverse the patch
-      -g, --git      Make a git branch
-      -a, --ask      Make a git branch
+  -h, --help     show this help message and exit
+  -r, --reverse  Reverse the patch
+  -g, --git      Make a git branch
+  -a, --ask      Confirm ticket and patch name
 
-    Examples::
-        trac_patch.py [ticket_num] [-r]
+Examples::
+    trac_patch.py [ticket_num] [-r]
 
-        #Apply patch 6378
-        trac_patch.py 6378
+    #Apply patch 6378
+    trac_patch.py 6378
 
-        #Reverse patch 6378
-        trac_patch.py 6378 -r
+    #Reverse patch 6378
+    trac_patch.py 6378 -r
 
-        #Create a git branch and apply patch
-        trac_patch.py 6378 -g
+    #Create a git branch and apply patch
+    trac_patch.py 6378 -g
 
-        #Confirm patch filename and ticket filename
-        trac_patch.py 6378 -a
+    #Confirm patch filename and ticket filename
+    trac_patch.py 6378 -a
 
-    """
+"""
 
 
 import os
@@ -47,7 +47,7 @@ parser.add_option("-r", "--reverse", action="store_true", dest="reverse",
 parser.add_option("-g", "--git", action="store_true", dest="git",
                   default=False, help="Make a git branch")
 parser.add_option("-a", "--ask", action="store_true", dest="ask",
-                  default=False, help="Make a git branch")
+                  default=False, help="Confirm ticket and patch name")
 
 (options, args) = parser.parse_args()
 
